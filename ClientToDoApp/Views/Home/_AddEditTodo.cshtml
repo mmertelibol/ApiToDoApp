@@ -1,0 +1,45 @@
+﻿
+
+
+<div class="modal modal-center fade" id="addTodo" tabindex="-1" role="dialog" aria-labelledby="addTaskModalLAbel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-light"> <i class="fas fa-user-plus mr-2"></i>ToDo</h5>
+                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <textarea class="form-control" id="todoText" placeholder="Insert Todo.."></textarea> 
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" id="todoId">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" id="addEditToDo">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

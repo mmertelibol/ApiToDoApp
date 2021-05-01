@@ -1,0 +1,204 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToDo App</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <link href="~/lib/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css" integrity="sha256-He3QEBKoL/nMXlVsoM7S2C2kjFQqS5L+mgA+F8LpG+U=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" integrity="sha256-R91pD48xW+oHbpJYGn5xR0Q7tMhH4xOrWn1QqMRINtA=" crossorigin="anonymous" />
+
+</head>
+<body>
+
+    <div class="container">
+        <div class="mt-3" style="text-align:center ">
+            <h2>ToDo List</h2>
+        </div>
+
+        <div style="text-align:left">
+            <button class="btn btn-success btn-primary" data-toggle="modal" id="AddTodo" style="width:150px;  background-color:#5b47fb"><strong style="color:white">Todo Ekle</strong> </button>
+        </div>
+        <div class="mt-4">
+            <table id="todosTable" class="table table-hover table-bordered ">
+                <thead>
+                    <tr>
+
+                        <th>toDoText</th>
+                        <th>AddedDate</th>
+                        <th>UpdatedDate</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+
+        <partial name="_AddEditTodo">
+
+
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf8"
+            src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js">
+
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"
+            integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf"
+            crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js">
+
+
+    </script>
+    <script src="~/lib/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha256-yNbKY1y6h2rbVcQtf0b8lq4a+xpktyFc3pSYoGAY1qQ=" crossorigin="anonymous"></script>
+
+
+
+    <script>
+        var table;
+        function getList() {
+
+            $.ajax({
+                type: "GET",
+                url: "https://localhost:44301/api/todo/gettodolist",
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    debugger;
+                    table = $("#todosTable").DataTable({
+
+                        data: data,
+                        "columns": [
+                            { data: "todoText", "autoWidth": true },
+                            { data: "addedDate", "autoWidth": true },
+                            { data: "updatedDate", "autoWidth": true },
+                            {
+                                "render": function (data, type, row) {
+                                    return "<a href='#' class='btn btn-sm btn-primary' data-toggle='modal' data-target='#addTodo' onclick=getById('" + row.id + "'); ><i class=\"fas fa-eye mr-1\"></i>Edit</a>"
+                                }
+                            },
+                            {
+                                "render": function (data, type, row) {
+                                    return "<a class='btn btn-sm btn-danger text-light delete' id=" + row.id + "><i class=\"fas fa-trash-alt mr-1\"></i>Delete</a>";
+                                }
+                            }
+                        ]
+                    });
+                }
+            });
+        };
+
+
+        $(document).ready(function () {
+
+            getList();
+        });
+
+        $("#AddTodo").on("click", function () {
+            $("#todoId").val(0);
+            $("#todoText").val("")
+            $("#addTodo").modal("show");
+        });
+
+
+        $("#addEditToDo").click(function () {
+            let todoText = $("#todoText").val();
+            let id = Number($("#todoId").val());
+            $.ajax({
+                type: id == 0 ? "post" : "put",
+                url: id == 0 ? "https://localhost:44301/api/todo/addtodo" : "https://localhost:44301/api/todo/updatetodo",
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ 'ToDotext': todoText, 'Id': id }),
+                success: function (response) {
+                    debugger;
+                    table.destroy();
+                    getList();
+                    $("#addTodo").modal('hide');
+                    toastr.success("İşlem başarılı bir şekilde gerçekleşti!", "Başarılı !")
+                }
+            })
+        })
+
+
+        function getById(id) {
+            debugger;
+            /* let Id = Number(id);*/
+            $.ajax({
+                type: "GET",
+                url: "https://localhost:44301/api/todo/gettodobyid",
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: { Id: id },
+                success: function (data) {
+                    debugger;
+                    $("#todoId").val(data.id);
+                    $("#todoText").val(data.todoText);
+
+                }
+            })
+        }
+
+
+
+
+        $(document).on("click", ".delete", function () {
+            let id = Number($(this).attr("id"));
+            debugger;
+            Swal.fire({
+                title: 'Emin Misin?',
+                text: "ToDo Silinecek!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Evet, Sil!',
+                cancelButtonText: 'İptal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    debugger;
+                    $.ajax({
+                        type: "DELETE",
+                        url: "https://localhost:44301/api/todo/deletetodo",
+                        datatype: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({ "Id": id }),
+                        success: function (data) {
+                            debugger;
+
+                            table.destroy();
+                            getList();
+                            toastr.success("İşlem başarılı bir şekilde gerçekleşti!", "Başarılı !")
+                        }
+                    });
+                }
+            });
+        });
+
+
+    </script>
+
+
+</body>
+</html>
