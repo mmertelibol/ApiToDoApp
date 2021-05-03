@@ -55,7 +55,7 @@ namespace ToDoListAPI.Controllers
                 toDoToBeUpdated.Id = todo.Id;
                 toDoToBeUpdated.TodoText = todo.TodoText;
                 toDoToBeUpdated.IsDeleted = false;
-                toDoToBeUpdated.UpdatedDate = DateTime.Now;
+                toDoToBeUpdated.UpdatedDate = DateTime.Now.ToString();
                 var updatedTodo = _context.Todos.Update(toDoToBeUpdated);
                 _context.SaveChanges();
                 
@@ -86,7 +86,7 @@ namespace ToDoListAPI.Controllers
                 Todo addedToBeTodo = new Todo();
                 addedToBeTodo.TodoText = todo.TodoText;
                 addedToBeTodo.IsDeleted = false;
-                addedToBeTodo.AddedDate = DateTime.Now;
+                addedToBeTodo.AddedDate = DateTime.Now.ToString();
                 var addedTodo = _context.Todos.Add(addedToBeTodo);
                 _context.SaveChanges();
             return NoContent();
