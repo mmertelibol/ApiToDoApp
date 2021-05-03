@@ -32,11 +32,11 @@
                 <thead>
                     <tr>
 
-                        <th>toDoText</th>
-                        <th>AddedDate</th>
-                        <th>UpdatedDate</th>
-                        <th></th>
-                        <th></th>
+                        <th>ToDo</th>
+                        <th>Eklenme Tarihi</th>
+                        <th>Güncellenme Tarihi</th>
+                        <th>Güncelle</th>
+                        <th>Sil</th>
                     </tr>
                 </thead>
 
@@ -92,7 +92,19 @@
                         "columns": [
                             { data: "todoText", "autoWidth": true },
                             { data: "addedDate", "autoWidth": true },
-                            { data: "updatedDate", "autoWidth": true },
+                            //{ data: "updatedDate", "autoWidth": true, },
+                            {
+                                "render": function (data, type, row) {
+                                    if (row.updatedDate==null) {
+                                        return "<span class='badge badge-secondary complete'><i class='fas fa-times mr-1'></i>Güncellenmedi</span>"
+
+                                    }
+                                    else {
+                                        return row.updatedDate;
+                                    }
+                                  
+                                }
+                            },
                             {
                                 "render": function (data, type, row) {
                                     return "<a href='#' class='btn btn-sm btn-primary' data-toggle='modal' data-target='#addTodo' onclick=getById('" + row.id + "'); ><i class=\"fas fa-eye mr-1\"></i>Edit</a>"
@@ -103,6 +115,7 @@
                                     return "<a class='btn btn-sm btn-danger text-light delete' id=" + row.id + "><i class=\"fas fa-trash-alt mr-1\"></i>Delete</a>";
                                 }
                             }
+
                         ]
                     });
                 }
