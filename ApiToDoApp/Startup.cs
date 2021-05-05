@@ -1,3 +1,4 @@
+using ApiToDoApp.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -41,6 +42,8 @@ namespace ApiToDoApp
                     .SetIsOriginAllowed((host) => true)
                     .AllowCredentials());
             });
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,13 +60,14 @@ namespace ApiToDoApp
 
             app.UseRouting();
 
-            app.UseCors();
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<TodoHub>("/todoHub");
             });
         }
     }

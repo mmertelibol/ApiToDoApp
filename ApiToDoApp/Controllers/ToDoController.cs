@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using ApiToDoApp.Hubs;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -21,10 +23,13 @@ namespace ToDoListAPI.Controllers
     public class ToDoController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IHubContext<TodoHub> _todoHub;
         
-        public ToDoController(AppDbContext context, ILogger<ToDoController> logger)
+        public ToDoController(AppDbContext context, ILogger<ToDoController> logger,
+            IHubContext<TodoHub> todoHub)
         {
             _context = context;
+            _todoHub = todoHub;
             
         }
 
@@ -57,6 +62,7 @@ namespace ToDoListAPI.Controllers
                 toDoToBeUpdated.IsDeleted = false;
                 toDoToBeUpdated.UpdatedDate = DateTime.Now.ToString();
                 var updatedTodo = _context.Todos.Update(toDoToBeUpdated);
+                _todoHub.Clients.All.SendAsync("getList");
                 _context.SaveChanges();
                 
             }
@@ -76,6 +82,8 @@ namespace ToDoListAPI.Controllers
             var toDoToBeDelete = _context.Todos.FirstOrDefault(x => x.Id == todo.Id);
             var deletedTodo = _context.Todos.Remove(toDoToBeDelete);
             _context.SaveChanges();
+            _todoHub.Clients.All.SendAsync("getList");
+
             return Ok();
 
         }
@@ -89,6 +97,7 @@ namespace ToDoListAPI.Controllers
                 addedToBeTodo.AddedDate = DateTime.Now.ToString();
                 var addedTodo = _context.Todos.Add(addedToBeTodo);
                 _context.SaveChanges();
+            _todoHub.Clients.All.SendAsync("getList");
             return NoContent();
         }
     }
