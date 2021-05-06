@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ApiToDoApp.Migrations
 {
-    public partial class Initilize : Migration
+    public partial class initialize : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,8 +13,8 @@ namespace ApiToDoApp.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TodoText = table.Column<string>(nullable: true),
-                    AddedDate = table.Column<DateTime>(nullable: true),
-                    UpdatedDate = table.Column<DateTime>(nullable: true),
+                    AddedDate = table.Column<string>(nullable: true),
+                    UpdatedDate = table.Column<string>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>

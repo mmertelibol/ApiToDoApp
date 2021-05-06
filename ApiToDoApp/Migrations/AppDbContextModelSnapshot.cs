@@ -31,6 +31,9 @@ namespace ApiToDoApp.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDone")
+                        .HasColumnType("bit");
+
                     b.Property<string>("TodoText")
                         .HasColumnType("nvarchar(max)");
 

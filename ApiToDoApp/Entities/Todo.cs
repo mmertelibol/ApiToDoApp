@@ -16,5 +16,7 @@ namespace ToDoListAPI.Entities
         public string AddedDate { get; set; }
         public string UpdatedDate { get; set; }
         public bool IsDeleted { get; set; }
+        public bool IsDone { get; set; } 
+
     }
 }

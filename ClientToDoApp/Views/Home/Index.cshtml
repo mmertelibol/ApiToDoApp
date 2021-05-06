@@ -35,8 +35,12 @@
                         <th>ToDo</th>
                         <th>Eklenme Tarihi</th>
                         <th>Güncellenme Tarihi</th>
+                        <th>Tamamlandı</th>
+
+
                         <th>Güncelle</th>
                         <th>Sil</th>
+                       
                     </tr>
                 </thead>
 
@@ -89,7 +93,7 @@
                         "columns": [
                             { data: "todoText", "autoWidth": true },
                             { data: "addedDate", "autoWidth": true },
-                            //{ data: "updatedDate", "autoWidth": true, },
+                            /*{ data: "isDone", "autoWidth": true, },*/
                             {
                                 "render": function (data, type, row) {
                                     if (row.updatedDate==null) {
@@ -102,6 +106,18 @@
                                   
                                 }
                             },
+                            {
+                                "render": function (data, type, row) {
+
+                                    if (row.isDone == true) {
+                                        return "<button class='btn btn-secondary' disabled>Completed</button>"
+                                    }
+                                    else {
+                                        return "<a href='#' class='btn btn-success' onclick=Done('" + row.id + "'); >Complete</a>";
+                                    }
+                                }
+                            },
+                          
                             {
                                 "render": function (data, type, row) {
                                     return "<a href='#' class='btn btn-sm btn-primary' data-toggle='modal' data-target='#addTodo' onclick=getById('" + row.id + "'); ><i class=\"fas fa-eye mr-1\"></i>Edit</a>"
@@ -157,7 +173,7 @@
             })
         })
 
-
+       
         function getById(id) {
             debugger;
             /* let Id = Number(id);*/
@@ -176,7 +192,24 @@
             })
         }
 
+        function Done(id) {
+            debugger;
+            $.ajax({
+                type: "Get",
+                url: "https://localhost:44301/api/todo/todoDone",
+                datatype: "json",
+                contentType: "application/json; charset=utf-8",
+                data: { Id: id },
+                success: function (data) {
+                    debugger;
+                    toastr.success("İşlem başarılı bir şekilde gerçekleşti!", "Başarılı !")
+                    getList();
 
+                }
+            })
+
+
+        }
 
 
         $(document).on("click", ".delete", function () {

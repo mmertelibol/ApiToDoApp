@@ -9,8 +9,8 @@ using ToDoListAPI.Entities;
 namespace ApiToDoApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210503111122_DateTimeToStringInTodoTable")]
-    partial class DateTimeToStringInTodoTable
+    [Migration("20210506102059_addedIsDoneInTodo")]
+    partial class addedIsDoneInTodo
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,6 +31,9 @@ namespace ApiToDoApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDone")
                         .HasColumnType("bit");
 
                     b.Property<string>("TodoText")

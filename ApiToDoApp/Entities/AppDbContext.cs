@@ -8,10 +8,11 @@ namespace ToDoListAPI.Entities
 {
     public class AppDbContext:DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options):base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 
         }
+
         public DbSet<Todo> Todos { get; set; }
 
         public override int SaveChanges()
@@ -19,7 +20,7 @@ namespace ToDoListAPI.Entities
             foreach (var entry in ChangeTracker.Entries())
             {
                 var entity = entry.Entity;
-                if (entry.State==EntityState.Deleted)
+                if (entry.State == EntityState.Deleted)
                 {
                     entry.State = EntityState.Modified;
                     entity.GetType().GetProperty("IsDeleted").SetValue(entity, true);

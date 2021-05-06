@@ -29,9 +29,12 @@ namespace ApiToDoApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<AppDbContext>(opt => {
+            services.AddDbContext<AppDbContext>(opt =>
+            {
                 opt.UseSqlServer(Configuration["DefaultConnection"]);
             });
+            //services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
+            //opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddCors(options =>
             {

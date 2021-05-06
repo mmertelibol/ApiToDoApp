@@ -16,7 +16,7 @@ namespace ToDoListAPI.Controllers
     //NoContent(update) 204
     //NoContent(delete) 204
     //Created(add) 201
-    
+
     [Route("api/[controller]/[action]")]
     [EnableCors("CorsPolicy")]
     [ApiController]
@@ -24,13 +24,13 @@ namespace ToDoListAPI.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IHubContext<TodoHub> _todoHub;
-        
+
         public ToDoController(AppDbContext context, ILogger<ToDoController> logger,
             IHubContext<TodoHub> todoHub)
         {
             _context = context;
             _todoHub = todoHub;
-            
+
         }
 
         [HttpGet]
@@ -40,6 +40,15 @@ namespace ToDoListAPI.Controllers
             return Ok(toDoList);
         }
 
+        [HttpGet]
+        public IActionResult TodoDone(int id)
+        {
+            var todo = _context.Todos.FirstOrDefault(x => x.Id == id);
+            todo.IsDone = true;
+            _context.SaveChanges();
+            return Ok();
+
+        }
 
 
         [HttpGet]
@@ -51,7 +60,7 @@ namespace ToDoListAPI.Controllers
 
 
         [HttpPut]
-        public IActionResult UpDateToDo( Todo todo)
+        public IActionResult UpDateToDo(Todo todo)
         {
             try
             {
@@ -64,7 +73,7 @@ namespace ToDoListAPI.Controllers
                 var updatedTodo = _context.Todos.Update(toDoToBeUpdated);
                 _todoHub.Clients.All.SendAsync("getList");
                 _context.SaveChanges();
-                
+
             }
             catch (Exception)
             {
@@ -90,13 +99,13 @@ namespace ToDoListAPI.Controllers
         [EnableCors("CorsPolicy")]
         [HttpPost]
         public IActionResult AddTodo(Todo todo)
-        {        
-                Todo addedToBeTodo = new Todo();
-                addedToBeTodo.TodoText = todo.TodoText;
-                addedToBeTodo.IsDeleted = false;
-                addedToBeTodo.AddedDate = DateTime.Now.ToString();
-                var addedTodo = _context.Todos.Add(addedToBeTodo);
-                _context.SaveChanges();
+        {
+            Todo addedToBeTodo = new Todo();
+            addedToBeTodo.TodoText = todo.TodoText;
+            addedToBeTodo.IsDeleted = false;
+            addedToBeTodo.AddedDate = DateTime.Now.ToString();
+            var addedTodo = _context.Todos.Add(addedToBeTodo);
+            _context.SaveChanges();
             _todoHub.Clients.All.SendAsync("getList");
             return NoContent();
         }

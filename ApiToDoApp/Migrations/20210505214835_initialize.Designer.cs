@@ -9,8 +9,8 @@ using ToDoListAPI.Entities;
 namespace ApiToDoApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210505134136_Hub")]
-    partial class Hub
+    [Migration("20210505214835_initialize")]
+    partial class initialize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
