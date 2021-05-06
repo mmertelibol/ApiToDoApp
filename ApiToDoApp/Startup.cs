@@ -1,4 +1,5 @@
 using ApiToDoApp.Hubs;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -47,6 +48,8 @@ namespace ApiToDoApp
             });
 
             services.AddSignalR();
+            services.AddHangfire(hf => hf.UseSqlServerStorage(Configuration["DefaultConnection"]));
+            services.AddHangfireServer();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +69,7 @@ namespace ApiToDoApp
             app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
+            app.UseHangfireDashboard();
 
             app.UseEndpoints(endpoints =>
             {
